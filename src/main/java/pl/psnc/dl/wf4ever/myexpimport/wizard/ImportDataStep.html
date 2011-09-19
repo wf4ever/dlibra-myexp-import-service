@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+	<div class="entry">
+		<p>
+			Press <i>Start</i> to start copying the resources. The process should
+			take not longer then a few minutes, depending on the amount and size
+			of your data. After it is complete, you will see a message on the top
+			of the screen.
+		</p>
+		<p>If you provided RO names that already exist in your account in
+			dLibra, the resources will be added to the existing RO. If resources
+			with the same name exist, they will be overwritten.</p>
+		<p>
+			Import status messages:<br />
+			<textarea rows="10" cols="70" wicket:id="messages"
+				readonly="readonly" style="white-space: nowrap;" wrap="off"></textarea>
+		</p>
+		<p>
+			<input type="button" wicket:id="go" value="Start" />
+		</p>
+	</div>
+</wicket:panel>

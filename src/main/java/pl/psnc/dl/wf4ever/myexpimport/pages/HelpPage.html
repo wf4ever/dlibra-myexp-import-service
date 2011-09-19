@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+	<div class="post">
+		<h2 class="title">Help</h2>
+		<div class="entry">
+			<h4>How to import data from myExperiment to dLibra?</h4>
+			<p>The import wizard allows you to copy your resources
+				(workflows/files/packs) from myExperiment to dLibra, aggregating
+				them as Research Objects (RO).</p>
+			<p>The wizard has the following steps:</p>
+			<ol>
+				<li><p>
+						Start the wizard by pressing the button on the main page. If the
+						button is disabled, make sure that you are registered in dLibra.<br />
+						<a href="images/help1.png"><img src="images/help1t.png" /></a><br />
+						<a href="images/help2.png"><img src="images/help2t.png" /></a>
+					</p></li>
+				<li><p>
+						Select resources. Choose if you want to import all resources as 1
+						RO (for example all files and workflows) <strong>or</strong> every
+						resource as a separate RO (for example all packs). You can later
+						repeat this step many times if you want.<br /> <a
+							href="images/help3.png"><img src="images/help3t.png" /></a>
+					</p></li>
+				<li><p>Choose RO names. The proposed names are based on
+						resource titles. RO names are currently also used as RO
+						identifiers, so you may only use alphanumeric characters and the
+						underscore character.</p>
+					<p>The RO names have to be unique during the import process.
+						The wizard will not continue if you provide a name that was
+						already used. However, you can provide a name of an existing RO,
+						in which case the imported resources will be added to it.</p></li>
+				<li><p>
+						<i>Go back to step 1 if you want to define more ROs.</i> If you
+						leave the checkbox checked, you will go back to step number 2. If
+						you uncheck it, you will go to the next step.<br /> <a
+							href="images/help4.png"><img src="images/help4t.png" /></a>
+					</p></li>
+				<li><p>Press Start. The wizard will create ROs in dLibra
+						and copy selected resources from myExperiment to dLibra. If an
+						error occurs during import, importing the current RO will be
+						interrupted and the wizard will try to import the next RO.</p>
+					<p>
+						All status messages will appear in the text area. At the end of
+						the import process a message will appear on the top of the screen.<br />
+						<a href="images/help5.png"><img src="images/help5t.png" /></a><br />
+						<a href="images/help6.png"><img src="images/help6t.png" /></a>
+					</p></li>
+				<li><p>
+						Your data has been imported.<br /> <a href="images/help7.png"><img
+							src="images/help7t.png" /></a>
+					</p></li>
+			</ol>
+		</div>
+	</div>
+</wicket:extend>

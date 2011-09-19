@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+	<div class="entry">
+		<p>Please check the default Research Object names provided below.
+			Make sure that none of them are repeated.</p>
+		<p>For the time being, RO names work as both machine identifiers
+			and human-readable names, so please use only alphanumeric characters
+			and the underscore character. Most probably you will be able to provide another
+			human-readable name for the RO in the future.</p>
+		<form wicket:id="form">
+			<table class="resourceList">
+				<tr>
+					<th>RO name</th>
+					<th>RO content</th>
+				</tr>
+				<tr wicket:id="resourceListView">
+					<td><input type="text" wicket:id="name" /></td>
+					<td><span wicket:id="content"></span></td>
+				</tr>
+			</table>
+		</form>
+		<p>&nbsp;</p>
+		<form wicket:id="formAddMore">
+			<p>
+				<input type="checkbox" id="addMoreROs" wicket:id="addMoreROs" /><label
+					for="addMoreROs">Define more Research Objects?</label>
+			</p>
+		</form>
+
+	</div>
+</wicket:panel>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+	<div class="entry">
+		<p>
+			You have been authorized as <strong wicket:id="userName"></strong>.
+		</p>
+		<p>
+			<span wicket:id="packsCnt">0</span> packs, <span
+				wicket:id="workflowsCnt">0</span> workflows and <span
+				wicket:id="filesCnt">0</span> files have been found in your
+			myExperiment account.
+		</p>
+		<p>This wizard allows you to copy your resources
+			(workflows/files/packs) from myExperiment to dLibra, aggregating them
+			as Research Objects (RO). The wizard will help you to select how you
+			want to aggregate these resources.</p>
+		<p>Since the actual structure of RO and its metadata is still
+			under development, for every imported resource its accompanying RDF
+			file will also be transfered to make sure that the metadata will be
+			available for processing in the future.</p>
+		<p>The wizard has the following steps:</p>
+		<ol>
+			<li>Select resources. Choose if you want to import all resources
+				as 1 RO <strong>or</strong> every resource as a separate RO.
+			</li>
+			<li>Choose RO names.</li>
+			<li><i>Go back to step 1 if you want to define more ROs.</i></li>
+			<li>Create ROs in dLibra, copy selected resources from
+				myExperiment to dLibra.</li>
+			<li>Summary.</li>
+		</ol>
+	</div>
+</wicket:panel>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wicket="http://wicket.apache.org">
+<head>
+<wicket:head>
+	<link href="styles/style.css" rel="stylesheet" type="text/css" />
+</wicket:head>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header">
+			<div id="logo">
+				<p>&nbsp;</p>
+				<p>
+					<a href="/">Wf4Ever User Management Service</a>
+				</p>
+			</div>
+		</div>
+		<div id="menu">
+			<ul>
+				<li><a wicket:id="home">Home</a></li>
+				<li><a wicket:id="about">About</a></li>
+				<li><a wicket:id="help">Help</a></li>
+			</ul>
+		</div>
+		<div id="page">
+			<div id="page-bgtop">
+				<div id="page-bgbtm">
+					<div id="content" wicket:id="content">
+						<div style="clear: both;" wicket:id="feedback"></div>
+						<wicket:child />
+						<div style="clear: both;">&nbsp;</div>
+					</div>
+					<div id="sidebar" wicket:id="sidebar"></div>
+				</div>
+				<div style="clear: both;">&nbsp;</div>
+			</div>
+		</div>
+	</div>
+	<div id="footer">
+		<p>
+			Copyright (c) 2011 <a href="http://www.psnc.pl">PSNC</a>. All rights
+			reserved. Design by <a href="http://www.freecsstemplates.org/">Free
+				CSS Templates</a>.
+		</p>
+	</div>
+</body>
+</html>

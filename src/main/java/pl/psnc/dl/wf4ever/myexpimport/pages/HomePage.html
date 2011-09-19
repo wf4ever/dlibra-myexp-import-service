@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+	<div class="post">
+		<h2 class="title">Welcome!</h2>
+		<div class="entry">
+			<form wicket:id="form">
+				<div wicket:id="message"></div>
+				<div wicket:id="credentials">
+					<p>In order to start importing your data from myExperiment to
+						dLibra, you need to give access to both services:</p>
+					<ol>
+						<li><p>
+								Authorize this service to get your data from myExperiment <input
+									type="submit" wicket:id="authMyExp" value="Start" />
+							</p></li>
+						<li><p>
+								Authorize this service to put your data to dLibra <input
+									type="submit" wicket:id="authDlibra" value="Start" />
+							</p></li>
+						<li><p>
+								Start the import process <input type="submit"
+									wicket:id="myExpImportButton"
+									value="Import data from myExperiment" />
+							</p></li>
+					</ol>
+				</div>
+			</form>
+		</div>
+	</div>
+</wicket:extend>
