@@ -59,7 +59,10 @@ public class HomePage
 			{
 				Token at = tryLoadDlibraTestToken();
 				if (at == null) {
-					startDlibraAuthorization();
+					startMyExpAuthorization();
+				} else {
+					setMyExpAccessToken(at);
+					goToPage(HomePage.class, null);
 				}
 			}
 		};
@@ -73,7 +76,10 @@ public class HomePage
 			{
 				Token at = tryLoadMyExpTestToken();
 				if (at == null) {
-					startMyExpAuthorization();
+					startDlibraAuthorization();
+				} else {
+					setDlibraAccessToken(at);
+					goToPage(HomePage.class, null);
 				}
 			}
 		};
