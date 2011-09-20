@@ -31,7 +31,7 @@ public class MyExpImportPage
 			return;
 
 		OAuthService service = MyExpApi.getOAuthService(WicketUtils
-				.getCompleteUrl(this, MyExpImportPage.class, true));
+				.getCompleteUrl(this, MyExpImportPage.class));
 
 		try {
 			User myExpUser = retrieveMyExpUser(getMyExpAccessToken(), service);

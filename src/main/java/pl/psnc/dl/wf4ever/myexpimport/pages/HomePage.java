@@ -2,9 +2,14 @@ package pl.psnc.dl.wf4ever.myexpimport.pages;
 
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.scribe.model.Token;
@@ -57,10 +62,11 @@ public class HomePage
 			@Override
 			public void onSubmit()
 			{
-				Token at = tryLoadDlibraTestToken();
+				Token at = tryLoadMyExpTestToken();
 				if (at == null) {
 					startMyExpAuthorization();
-				} else {
+				}
+				else {
 					setMyExpAccessToken(at);
 					goToPage(HomePage.class, null);
 				}
@@ -74,10 +80,11 @@ public class HomePage
 			@Override
 			public void onSubmit()
 			{
-				Token at = tryLoadMyExpTestToken();
+				Token at = tryLoadDlibraTestToken();
 				if (at == null) {
 					startDlibraAuthorization();
-				} else {
+				}
+				else {
 					setDlibraAccessToken(at);
 					goToPage(HomePage.class, null);
 				}
@@ -105,27 +112,20 @@ public class HomePage
 	{
 		if (getMyExpAccessToken() == null) {
 			OAuthService service = MyExpApi.getOAuthService(WicketUtils
-					.getCompleteUrl(this, HomePage.class, true));
+					.getCompleteUrl(this, HomePage.class));
 			Token token = retrieveMyExpAccessToken(pageParameters, service);
 			setMyExpAccessToken(token);
 		}
 		else if (getDlibraAccessToken() == null) {
 			OAuthService service = DlibraApi.getOAuthService(WicketUtils
-					.getCompleteUrl(this, HomePage.class, true));
+					.getCompleteUrl(this, HomePage.class));
 			Token token = retrieveDlibraAccessToken(pageParameters, service);
 			setDlibraAccessToken(token);
 		}
 	}
 
 
-	protected void startDlibraAuthorization()
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-
-	protected Token tryLoadDlibraTestToken()
+	private Token tryLoadDlibraTestToken()
 	{
 		Properties props = new Properties();
 		try {
@@ -143,7 +143,7 @@ public class HomePage
 	}
 
 
-	protected Token tryLoadMyExpTestToken()
+	private Token tryLoadMyExpTestToken()
 	{
 		Properties props = new Properties();
 		try {
@@ -165,7 +165,7 @@ public class HomePage
 	private void startMyExpAuthorization()
 	{
 		String oauthCallbackURL = WicketUtils.getCompleteUrl(this,
-			HomePage.class, false);
+			HomePage.class);
 
 		OAuthService service = MyExpApi.getOAuthService(oauthCallbackURL);
 		Token requestToken = service.getRequestToken();
@@ -174,6 +174,19 @@ public class HomePage
 		String authorizationUrl = service.getAuthorizationUrl(requestToken);
 		log.debug("Request token: " + requestToken.toString() + " service: "
 				+ service.getAuthorizationUrl(requestToken));
+		getRequestCycle().scheduleRequestHandlerAfterCurrent(
+			new RedirectRequestHandler(authorizationUrl));
+	}
+
+
+	protected void startDlibraAuthorization()
+	{
+		//		String oauthCallbackURL = WicketUtils.getCompleteUrl(this,
+		//			HomePage.class);
+		String oauthCallbackURL = "http://localhost:8080";
+
+		OAuthService service = DlibraApi.getOAuthService(oauthCallbackURL);
+		String authorizationUrl = service.getAuthorizationUrl(null);
 		getRequestCycle().scheduleRequestHandlerAfterCurrent(
 			new RedirectRequestHandler(authorizationUrl));
 	}
@@ -210,7 +223,21 @@ public class HomePage
 	private Token retrieveDlibraAccessToken(PageParameters pageParameters,
 			OAuthService service)
 	{
+		Url url = getRequest().getOriginalUrl();
+		String fragment = url.getPath();
+
 		Token accessToken = null;
+		if (!pageParameters.get("access_token").isEmpty()
+				&& !pageParameters.get("token_type").isEmpty()) {
+			if (pageParameters.get("token_type").equals("bearer")) {
+				accessToken = new Token(pageParameters.get("access_token")
+						.toString(), null);
+			}
+			else {
+				error("Unsupported token type: "
+						+ pageParameters.get("token_type").toString());
+			}
+		}
 		return accessToken;
 	}
 

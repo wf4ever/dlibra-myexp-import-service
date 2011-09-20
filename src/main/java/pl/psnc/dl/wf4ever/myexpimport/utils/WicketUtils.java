@@ -21,13 +21,10 @@ public class WicketUtils
 	 * authentication.
 	 * 
 	 */
-	public static String getCompleteUrl(WebPage page, Class<? extends WebPage> pageClass,
-			boolean isReturn)
+	public static String getCompleteUrl(WebPage page,
+			Class< ? extends WebPage> pageClass)
 	{
 		PageParameters params = new PageParameters();
-		if (isReturn) {
-			params.add("is_return", "true");
-		}
 		return RequestCycle
 				.get()
 				.getUrlRenderer()
