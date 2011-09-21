@@ -1,17 +1,22 @@
 package pl.psnc.dl.wf4ever.myexpimport.pages;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
@@ -68,6 +73,8 @@ public class HomePage
 				}
 				else {
 					setMyExpAccessToken(at);
+					getSession().debug("Loaded test token for myExperiment");
+					setResponsePage(HomePage.class);
 					goToPage(HomePage.class, null);
 				}
 			}
@@ -86,6 +93,8 @@ public class HomePage
 				}
 				else {
 					setDlibraAccessToken(at);
+					getSession().debug("Loaded test token for dLibra");
+					setResponsePage(HomePage.class);
 					goToPage(HomePage.class, null);
 				}
 			}
@@ -115,12 +124,18 @@ public class HomePage
 					.getCompleteUrl(this, HomePage.class));
 			Token token = retrieveMyExpAccessToken(pageParameters, service);
 			setMyExpAccessToken(token);
+			if (token != null) {
+				info("Successfully received myExperiment access token");
+			}
 		}
 		else if (getDlibraAccessToken() == null) {
 			OAuthService service = DlibraApi.getOAuthService(WicketUtils
 					.getCompleteUrl(this, HomePage.class));
 			Token token = retrieveDlibraAccessToken(pageParameters, service);
 			setDlibraAccessToken(token);
+			if (token != null) {
+				info("Successfully received dLibra access token");
+			}
 		}
 	}
 
@@ -223,10 +238,9 @@ public class HomePage
 	private Token retrieveDlibraAccessToken(PageParameters pageParameters,
 			OAuthService service)
 	{
-		Url url = getRequest().getOriginalUrl();
-		String fragment = url.getPath();
-
 		Token accessToken = null;
+		//TODO in the OAuth 2.0 implicit grant flow the access token is sent 
+		//in URL fragment - how to retrieve it in Wicket?
 		if (!pageParameters.get("access_token").isEmpty()
 				&& !pageParameters.get("token_type").isEmpty()) {
 			if (pageParameters.get("token_type").equals("bearer")) {
@@ -236,6 +250,57 @@ public class HomePage
 			else {
 				error("Unsupported token type: "
 						+ pageParameters.get("token_type").toString());
+			}
+		}
+		else if (!pageParameters.get("code").isEmpty()) {
+			String url = new DlibraApi().getAccessTokenEndpoint()
+					+ "?grant_type=authorization_code&code="
+					+ pageParameters.get("code").toString();
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpGet httpget = new HttpGet(url);
+				HttpResponse response = httpclient.execute(httpget);
+				HttpEntity entity = response.getEntity();
+				ObjectMapper mapper = new ObjectMapper();
+				@SuppressWarnings("unchecked")
+				Map<String, String> responseData = mapper.readValue(
+					entity.getContent(), Map.class);
+				entity.getContent().close();
+				if (response.getStatusLine().getStatusCode() == 200) {
+					if (responseData.containsKey("access_token")
+							&& responseData.containsKey("token_type")) {
+						if (responseData.get("token_type").equalsIgnoreCase(
+							"bearer")) {
+							accessToken = new Token(
+									responseData.get("access_token"), null);
+						}
+						else {
+							error("Unsupported access token type: "
+									+ responseData.get("token_type"));
+						}
+					}
+					else {
+						error("Missing keys from access token endpoint response");
+					}
+				}
+				else {
+					error(String.format(
+						"Access token endpoint returned error %s (%s)",
+						responseData.get("error"),
+						responseData.get("error_description")));
+				}
+			}
+			catch (JsonParseException e) {
+				error("Error in parsing access token endpoint response: "
+						+ e.getMessage());
+			}
+			catch (JsonMappingException e) {
+				error("Error in parsing access token endpoint response: "
+						+ e.getMessage());
+			}
+			catch (IOException e) {
+				error("Error in parsing access token endpoint response: "
+						+ e.getMessage());
 			}
 		}
 		return accessToken;
