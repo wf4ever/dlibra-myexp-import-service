@@ -13,7 +13,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.scribe.model.Response;
@@ -40,8 +39,6 @@ public abstract class TemplatePage
 
 	private static final long serialVersionUID = 4677896071331937974L;
 
-	protected Panel sidebarPanel;
-
 	protected WebMarkupContainer content;
 
 	protected boolean willBeRedirected = false;
@@ -59,8 +56,6 @@ public abstract class TemplatePage
 			willBeRedirected = true;
 			goToPage(HomePage.class, pageParameters);
 		}
-		// temporary
-		sidebarPanel = new LoggedOutPanel("sidebar");
 
 		add(new BookmarkablePageLink<Void>("home", getApplication()
 				.getHomePage()));
@@ -68,7 +63,6 @@ public abstract class TemplatePage
 		add(new BookmarkablePageLink<Void>("help", HelpPage.class));
 
 		add(content);
-		add(sidebarPanel);
 		content.add(new FeedbackPanel("feedback"));
 	}
 
