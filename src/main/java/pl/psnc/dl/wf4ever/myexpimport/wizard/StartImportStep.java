@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
 import pl.psnc.dl.wf4ever.myexpimport.model.ImportModel;
+import pl.psnc.dl.wf4ever.myexpimport.pages.TemplatePage;
 
 /**
  * @author Piotr Hołubowicz
@@ -47,7 +48,8 @@ public class StartImportStep
 	public IDynamicWizardStep next()
 	{
 		return new ChooseWorkspaceStep(this,
-				(ImportModel) this.getDefaultModelObject());
+				(ImportModel) this.getDefaultModelObject(),
+				((TemplatePage) getPage()).getDlibraAccessToken());
 	}
 
 }

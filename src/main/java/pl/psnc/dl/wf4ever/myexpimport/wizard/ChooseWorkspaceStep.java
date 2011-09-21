@@ -8,8 +8,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.validation.validator.PatternValidator;
+import org.scribe.model.Token;
 
 import pl.psnc.dl.wf4ever.myexpimport.model.ImportModel;
+import pl.psnc.dl.wf4ever.myexpimport.services.DlibraService;
 
 /**
  * @author Piotr Hołubowicz
@@ -23,10 +25,17 @@ public class ChooseWorkspaceStep
 
 
 	public ChooseWorkspaceStep(IDynamicWizardStep previousStep,
-			ImportModel model)
+			ImportModel model, Token token)
 	{
 		super(previousStep, "Choose workspace", model);
-
+		
+		try {
+			DlibraService.getWorkspaceList(token);
+		}
+		catch (Exception e) {
+			error(e.getMessage());
+		}
+		
 		Form<ImportModel> form = new Form<ImportModel>("form",
 				new CompoundPropertyModel<ImportModel>(model));
 		add(form);

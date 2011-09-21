@@ -3,9 +3,12 @@
  */
 package pl.psnc.dl.wf4ever.myexpimport.services;
 
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -15,6 +18,13 @@ import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 /**
  * @author Piotr Hołubowicz
@@ -45,7 +55,8 @@ public class DlibraService
 
 	private static final String URI_RESOURCE = URI_VERSION_ID + "/%s";
 
-	private static final OAuthService dLibraService = DlibraApi.getOAuthService(null);
+	private static final OAuthService dLibraService = DlibraApi
+			.getOAuthService(null);
 
 
 	public static boolean createWorkspace(String workspaceId, Token dLibraToken)
@@ -80,19 +91,55 @@ public class DlibraService
 		OAuthRequest request = new OAuthRequest(Verb.DELETE, url);
 		dLibraService.signRequest(dLibraToken, request);
 		Response response = request.send();
-		
-		if (response.getCode() != HttpURLConnection.HTTP_CONFLICT) {
+
+		if (response.getCode() != HttpURLConnection.HTTP_NO_CONTENT) {
 			throw new Exception("Error when deleting workspace, response: "
 					+ response.getCode() + " " + response.getBody());
 		}
 	}
 
 
-	public static boolean createResearchObjectAndVersion(String workspaceId, String name,
-			Token dLibraToken, boolean ignoreIfExists)
+	public static List<String> getWorkspaceList(Token dLibraToken)
 		throws Exception
 	{
-		return createResearchObject(workspaceId, name, dLibraToken, ignoreIfExists)
+		List<String> workspaces = new ArrayList<String>();
+
+		String url = createWorkspaceURL().toString();
+		OAuthRequest request = new OAuthRequest(Verb.GET, url);
+		dLibraService.signRequest(dLibraToken, request);
+		Response response = request.send();
+
+		Model model = ModelFactory.createDefaultModel();
+		Property aggregates = model
+				.createProperty("http://www.openarchives.org/ore/terms/aggregates");
+		model.read(new StringReader(response.getBody()), null);
+		Resource resource = model.createResource(url);
+		for (StmtIterator i = resource.listProperties(aggregates); i.hasNext();) {
+			Statement s = i.nextStatement();
+			Resource workspaceResource = s.getObject().asResource();
+			String uri = workspaceResource.getURI();
+			if (uri.indexOf('/') >= 0) {
+				workspaces.add(uri.substring(uri.lastIndexOf('/') + 1));
+			}
+			else {
+				log.warn("Workspace URI looks invalid: " + uri);
+			}
+		}
+
+		if (response.getCode() != HttpURLConnection.HTTP_OK) {
+			throw new Exception("Error when getting workspace list, response: "
+					+ response.getCode() + " " + response.getBody());
+		}
+		return workspaces;
+	}
+
+
+	public static boolean createResearchObjectAndVersion(String workspaceId,
+			String name, Token dLibraToken, boolean ignoreIfExists)
+		throws Exception
+	{
+		return createResearchObject(workspaceId, name, dLibraToken,
+			ignoreIfExists)
 				&& createVersion(workspaceId, name, dLibraToken, ignoreIfExists);
 	}
 
@@ -105,8 +152,8 @@ public class DlibraService
 	 * @return true only if ROSRS returns 201 Created
 	 * @throws Exception if ROSRS doesn't return 201 Created (or 409 if ignoreIfExists is true)
 	 */
-	public static boolean createResearchObject(String workspaceId, String name, Token dLibraToken,
-			boolean ignoreIfExists)
+	public static boolean createResearchObject(String workspaceId, String name,
+			Token dLibraToken, boolean ignoreIfExists)
 		throws Exception
 	{
 		String url = createROsURL(workspaceId).toString();
@@ -138,8 +185,8 @@ public class DlibraService
 	 * @return true only if ROSRS returns 201 Created
 	 * @throws Exception if ROSRS doesn't return 201 Created (or 409 if ignoreIfExists is true)
 	 */
-	public static boolean createVersion(String workspaceId, String roName, Token dLibraToken, 
-			boolean ignoreIfExists)
+	public static boolean createVersion(String workspaceId, String roName,
+			Token dLibraToken, boolean ignoreIfExists)
 		throws Exception
 	{
 		String url = createROIdURL(workspaceId, roName).toString();
@@ -162,12 +209,12 @@ public class DlibraService
 	}
 
 
-	public static void sendResource(String workspaceId, String path, String roName, String content,
-			String contentType, Token dLibraToken)
+	public static void sendResource(String workspaceId, String path,
+			String roName, String content, String contentType, Token dLibraToken)
 		throws Exception
 	{
-		String url = createResourceURL(workspaceId, roName,
-			DEFAULT_VERSION, path).toString();
+		String url = createResourceURL(workspaceId, roName, DEFAULT_VERSION,
+			path).toString();
 		OAuthRequest request = new OAuthRequest(Verb.PUT, url);
 		request.addHeader("Content-Type", contentType != null ? contentType
 				: "text/plain");
@@ -180,7 +227,6 @@ public class DlibraService
 					+ response.getBody());
 		}
 	}
-
 
 
 	public static Token generateAccessToken(String username, String password)
@@ -249,8 +295,8 @@ public class DlibraService
 			String versionId, String resource)
 	{
 		try {
-			String path = String.format(URI_RESOURCE, workspaceId, roId, DEFAULT_VERSION,
-				resource);
+			String path = String.format(URI_RESOURCE, workspaceId, roId,
+				DEFAULT_VERSION, resource);
 			return new URI(URI_SCHEME, URI_HOST, path, null).toURL();
 		}
 		catch (Exception e) {
