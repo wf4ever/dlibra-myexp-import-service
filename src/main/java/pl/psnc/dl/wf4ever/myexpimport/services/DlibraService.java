@@ -61,7 +61,7 @@ public class DlibraService
 		Response response = request.send();
 		if (response.getCode() != HttpURLConnection.HTTP_CREATED) {
 			if (response.getCode() == HttpURLConnection.HTTP_CONFLICT) {
-				log.warn("Registering a user that already exists in dLibra");
+				log.warn("Creating a workspace that already exists in dLibra");
 				created = false;
 			}
 			else {

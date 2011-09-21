@@ -39,6 +39,8 @@ public class ImportModel
 	private ImportStatus status = ImportStatus.NOT_STARTED;
 
 	private boolean mergeROs = true;
+	
+	private String workspaceId;
 
 
 	public ImportModel(User user)
@@ -170,6 +172,24 @@ public class ImportModel
 			list.addAll(ro.getPacks());
 		}
 		return list;
+	}
+
+
+	/**
+	 * @return the workspaceId
+	 */
+	public String getWorkspaceId()
+	{
+		return workspaceId;
+	}
+
+
+	/**
+	 * @param workspaceId the workspaceId to set
+	 */
+	public void setWorkspaceId(String workspaceId)
+	{
+		this.workspaceId = workspaceId;
 	}
 
 }

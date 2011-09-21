@@ -46,7 +46,7 @@ public class StartImportStep
 	@Override
 	public IDynamicWizardStep next()
 	{
-		return new SelectResourcesStep(this,
+		return new ChooseWorkspaceStep(this,
 				(ImportModel) this.getDefaultModelObject());
 	}
 

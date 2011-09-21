@@ -36,10 +36,6 @@ import pl.psnc.dl.wf4ever.myexpimport.model.myexp.SimpleResourceHeader;
 public class MyExpImportService
 {
 
-	// TODO let user choose the workspace
-	public static final String DEFAULT_WORKSPACE_ID = "defaultWorkspace";
-
-
 	public static void startImport(ImportModel model, Token myExpAccessToken,
 			Token dLibraAccessToken)
 	{
@@ -74,17 +70,41 @@ public class MyExpImportService
 		public void run()
 		{
 			model.setStatus(ImportStatus.RUNNING);
-			for (ResearchObject ro : model.getResearchObjects()) {
-				try {
-					importRO(ro);
+			try {
+				createWorkspace(model.getWorkspaceId());
+				for (ResearchObject ro : model.getResearchObjects()) {
+					try {
+						importRO(ro);
+					}
+					catch (Exception e) {
+						log.error("Error during import", e);
+						model.setMessage(e.getMessage());
+					}
 				}
-				catch (Exception e) {
-					log.error("Error during import", e);
-					model.setMessage(e.getMessage());
-				}
+			}
+			catch (Exception e1) {
+				log.error("Error when creating workspace", e1);
+				model.setMessage(e1.getMessage());
 			}
 			model.setMessage("Finished");
 			model.setStatus(ImportStatus.FINISHED);
+		}
+
+
+		/**
+		 * @param model
+		 * @param ro
+		 * @param dLibraUser
+		 * @throws Exception
+		 */
+		private void createWorkspace(String workspaceId)
+			throws Exception
+		{
+			model.setMessage(String.format("Creating a workspace \"%s\"",
+				workspaceId));
+			if (!DlibraService.createWorkspace(workspaceId, dLibraToken)) {
+				model.setMessage("Merged with an existing workspace");
+			}
 		}
 
 
@@ -180,7 +200,7 @@ public class MyExpImportService
 
 			String filename = path + r.getFilename();
 			model.setMessage(String.format("Uploading %s", filename));
-			DlibraService.sendResource(DEFAULT_WORKSPACE_ID, filename, roName,
+			DlibraService.sendResource(model.getWorkspaceId(), filename, roName,
 				r.getContentDecoded(), r.getContentType(), dLibraToken);
 
 			return r;
@@ -222,7 +242,7 @@ public class MyExpImportService
 
 			model.setMessage(String.format("Uploading metadata file %s",
 				filename));
-			DlibraService.sendResource(DEFAULT_WORKSPACE_ID, filename, roName,
+			DlibraService.sendResource(model.getWorkspaceId(), filename, roName,
 				rdf, "application/rdf+xml", dLibraToken);
 		}
 
@@ -239,7 +259,7 @@ public class MyExpImportService
 			model.setMessage(String.format("Creating a Research Object \"%s\"",
 				ro.getName()));
 			if (!DlibraService.createResearchObjectAndVersion(
-				DEFAULT_WORKSPACE_ID, ro.getName(), dLibraToken,
+				model.getWorkspaceId(), ro.getName(), dLibraToken,
 				model.isMergeROs())) {
 				model.setMessage("Merged with an existing Research Object");
 			}
