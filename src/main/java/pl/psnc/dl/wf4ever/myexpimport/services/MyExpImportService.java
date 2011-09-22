@@ -38,9 +38,9 @@ public class MyExpImportService
 {
 
 	public static void startImport(ImportModel model, Token myExpAccessToken,
-			Token dLibraAccessToken)
+			Token dLibraAccessToken, String consumerKey, String consumerSecret)
 	{
-		new ImportThread(model, myExpAccessToken, dLibraAccessToken).start();
+		new ImportThread(model, myExpAccessToken, dLibraAccessToken, consumerKey, consumerSecret).start();
 	}
 
 	private static class ImportThread
@@ -49,7 +49,7 @@ public class MyExpImportService
 
 		private static final Logger log = Logger.getLogger(ImportThread.class);
 
-		private final OAuthService service = MyExpApi.getOAuthService();
+		private final OAuthService service;
 
 		private ImportModel model;
 
@@ -59,12 +59,13 @@ public class MyExpImportService
 
 
 		public ImportThread(ImportModel importModel, Token myExpAccessToken,
-				Token dLibraToken)
+				Token dLibraToken, String consumerKey, String consumerSecret)
 		{
 			super();
 			model = importModel;
 			myExpToken = myExpAccessToken;
 			this.dLibraToken = dLibraToken;
+			service = MyExpApi.getOAuthService(consumerKey, consumerSecret);
 		}
 
 

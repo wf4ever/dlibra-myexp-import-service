@@ -16,14 +16,6 @@ public class MyExpApi
 	extends DefaultApi10a
 {
 
-	private static final String CONSUMER_KEY = "ZNABX0ydUDDlicofeI8ycQ ";
-//	private static final String CONSUMER_KEY = "W0Eog3P8R5AdWmL7R0dQ";
-//	private static final String CONSUMER_KEY = "jG3lEoLBI1mD97yP6Kpg";
-
-	private static final String SHARED_SECRET = "V30kDtFi48sBKh70YfYxPxHcA6Yll4sbqTH2kczA";
-//	private static final String SHARED_SECRET = "78M8gdWyLrL5TswsN2nV0pd0fQzx1NG8IMVWoiDgmU";
-//	private static final String SHARED_SECRET = "kmDf9FMpMEqwtLRYvhXej70HWMTzIEu71stLPjaHI";
-
 	public static final String OAUTH_VERIFIER = "oauth_token";
 
 	public static final String WHOAMI_URL = "http://www.myexperiment.org/whoami.xml";
@@ -31,20 +23,20 @@ public class MyExpApi
 	public static final String GET_USER_URL = "http://www.myexperiment.org/user.xml?id=%d&elements=id,openid-url,name,email,city,country,website,packs,workflows,files";
 
 
-	public static OAuthService getOAuthService(String oauthCallbackURL)
+	public static OAuthService getOAuthService(String consumerKey,
+			String consumerSecret, String oauthCallbackURL)
 	{
 		return new ServiceBuilder().provider(MyExpApi.class)
-				.apiKey(MyExpApi.CONSUMER_KEY)
-				.apiSecret(MyExpApi.SHARED_SECRET).callback(oauthCallbackURL)
-				.build();
+				.apiKey(consumerKey).apiSecret(consumerSecret)
+				.callback(oauthCallbackURL).build();
 	}
 
 
-	public static OAuthService getOAuthService()
+	public static OAuthService getOAuthService(String consumerKey,
+			String consumerSecret)
 	{
 		return new ServiceBuilder().provider(MyExpApi.class)
-				.apiKey(MyExpApi.CONSUMER_KEY)
-				.apiSecret(MyExpApi.SHARED_SECRET).build();
+				.apiKey(consumerKey).apiSecret(consumerSecret).build();
 	}
 
 

@@ -21,19 +21,13 @@ public class DlibraApi
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(DlibraApi.class);
 
-	// client id
-	private static final String CONSUMER_KEY = "b3c31959-ced6-41aa-b";
-
-	private static final String SHARED_SECRET = "foobar";
-
-
-	public static OAuthService getOAuthService(String callbackURL)
+	public static OAuthService getOAuthService(String callbackURL, String clientId)
 	{
 		//		return new ServiceBuilder().provider(DlibraApi.class)
 		//				.apiKey(DlibraApi.CONSUMER_KEY)
 		//				.apiSecret(DlibraApi.SHARED_SECRET).build();
 		return new OAuth20ServiceImpl(new DlibraApi(), new OAuthConfig(
-				CONSUMER_KEY, SHARED_SECRET, callbackURL, null, null));
+				clientId, "foobar", callbackURL, null, null));
 	}
 
 
@@ -54,6 +48,6 @@ public class DlibraApi
 		return String
 				.format(
 					"http://sandbox.wf4ever-project.org/users2/authorize?client_id=%s&response_type=%s",
-					CONSUMER_KEY, "code");
+					config.getApiKey(), "code");
 	}
 }

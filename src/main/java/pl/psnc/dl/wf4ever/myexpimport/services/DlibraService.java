@@ -56,7 +56,7 @@ public class DlibraService
 	private static final String URI_RESOURCE = URI_VERSION_ID + "/%s";
 
 	private static final OAuthService dLibraService = DlibraApi
-			.getOAuthService(null);
+			.getOAuthService("notused", null);
 
 
 	public static boolean createWorkspace(String workspaceId, Token dLibraToken)

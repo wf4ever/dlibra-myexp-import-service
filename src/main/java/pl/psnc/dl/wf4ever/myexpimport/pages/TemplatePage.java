@@ -109,6 +109,44 @@ public abstract class TemplatePage
 	}
 
 
+	protected void setDlibraClientId(String property)
+	{
+		getSession().setAttribute(Constants.SESSION_DLIBRA_CLIENT_ID, property);
+	}
+
+
+	protected String getDlibraClientId()
+	{
+		return (String) getSession().getAttribute(
+			Constants.SESSION_DLIBRA_CLIENT_ID);
+	}
+
+
+	protected void setMyExpConsumerSecret(String property)
+	{
+		getSession().setAttribute(Constants.SESSION_MYEXP_KEY, property);
+	}
+
+
+	public String getMyExpConsumerSecret()
+	{
+		return (String) getSession().getAttribute(Constants.SESSION_MYEXP_KEY);
+	}
+
+
+	protected void setMyExpConsumerKey(String property)
+	{
+		getSession().setAttribute(Constants.SESSION_MYEXP_SECRET, property);
+	}
+
+
+	public String getMyExpConsumerKey()
+	{
+		return (String) getSession().getAttribute(
+			Constants.SESSION_MYEXP_SECRET);
+	}
+
+
 	protected void goToPage(Class< ? extends TemplatePage> pageClass,
 			PageParameters pageParameters)
 	{

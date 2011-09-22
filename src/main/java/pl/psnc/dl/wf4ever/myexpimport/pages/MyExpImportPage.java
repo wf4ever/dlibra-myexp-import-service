@@ -30,8 +30,9 @@ public class MyExpImportPage
 		if (willBeRedirected)
 			return;
 
-		OAuthService service = MyExpApi.getOAuthService(WicketUtils
-				.getCompleteUrl(this, MyExpImportPage.class));
+		OAuthService service = MyExpApi.getOAuthService(
+			WicketUtils.getCompleteUrl(this, MyExpImportPage.class),
+			getMyExpConsumerKey(), getMyExpConsumerSecret());
 
 		try {
 			User myExpUser = retrieveMyExpUser(getMyExpAccessToken(), service);

@@ -52,7 +52,7 @@ public class ImportDataStep
 				if (model.getStatus() == ImportStatus.FINISHED) {
 					stop();
 					importStatus.remove(this);
-					((TemplatePage)getPage()).setImportDone(true);
+					((TemplatePage) getPage()).setImportDone(true);
 					getSession().info("Import complete.");
 					getRequestCycle().setResponsePage(getPage());
 				}
@@ -74,8 +74,10 @@ public class ImportDataStep
 							.getMyExpAccessToken();
 					Token dLibraAccessToken = ((TemplatePage) getPage())
 							.getDlibraAccessToken();
+					TemplatePage page = (TemplatePage) getPage();
 					MyExpImportService.startImport(model, myExpAccessToken,
-						dLibraAccessToken);
+						dLibraAccessToken, page.getMyExpConsumerKey(),
+						page.getMyExpConsumerSecret());
 					importStatus.add(updater);
 					target.add(importStatus);
 
@@ -107,13 +109,15 @@ public class ImportDataStep
 	{
 		return new SummaryStep(this, (ImportModel) this.getDefaultModelObject());
 	}
-	
+
+
 	@Override
 	public boolean isPreviousAvailable()
 	{
 		ImportModel model = (ImportModel) getDefaultModelObject();
 		return model.getStatus() == ImportStatus.NOT_STARTED;
 	}
+
 
 	@Override
 	public boolean isNextAvailable()
