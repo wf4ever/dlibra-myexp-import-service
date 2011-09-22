@@ -19,6 +19,7 @@ import org.scribe.oauth.OAuthService;
 
 import pl.psnc.dl.wf4ever.myexpimport.model.ImportModel;
 import pl.psnc.dl.wf4ever.myexpimport.model.ImportModel.ImportStatus;
+import pl.psnc.dl.wf4ever.myexpimport.model.ImportModel.WorkspaceType;
 import pl.psnc.dl.wf4ever.myexpimport.model.ResearchObject;
 import pl.psnc.dl.wf4ever.myexpimport.model.myexp.InternalPackItem;
 import pl.psnc.dl.wf4ever.myexpimport.model.myexp.InternalPackItemHeader;
@@ -71,7 +72,9 @@ public class MyExpImportService
 		{
 			model.setStatus(ImportStatus.RUNNING);
 			try {
-				createWorkspace(model.getWorkspaceId());
+				if (model.getWorkspaceType() == WorkspaceType.NEW) {
+					createWorkspace(model.getWorkspaceId());
+				}
 				for (ResearchObject ro : model.getResearchObjects()) {
 					try {
 						importRO(ro);
@@ -200,8 +203,8 @@ public class MyExpImportService
 
 			String filename = path + r.getFilename();
 			model.setMessage(String.format("Uploading %s", filename));
-			DlibraService.sendResource(model.getWorkspaceId(), filename, roName,
-				r.getContentDecoded(), r.getContentType(), dLibraToken);
+			DlibraService.sendResource(model.getWorkspaceId(), filename,
+				roName, r.getContentDecoded(), r.getContentType(), dLibraToken);
 
 			return r;
 		}
@@ -242,8 +245,8 @@ public class MyExpImportService
 
 			model.setMessage(String.format("Uploading metadata file %s",
 				filename));
-			DlibraService.sendResource(model.getWorkspaceId(), filename, roName,
-				rdf, "application/rdf+xml", dLibraToken);
+			DlibraService.sendResource(model.getWorkspaceId(), filename,
+				roName, rdf, "application/rdf+xml", dLibraToken);
 		}
 
 

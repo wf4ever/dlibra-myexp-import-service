@@ -10,8 +10,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.codehaus.jackson.JsonParseException;
@@ -42,6 +45,10 @@ public class HomePage
 
 	private static final Logger log = Logger.getLogger(HomePage.class);
 
+	private enum StepStatus {
+		NOT_AVAILABLE, PENDING, DONE
+	};
+
 
 	/**
 	 * Default Constructor
@@ -59,8 +66,46 @@ public class HomePage
 
 		processOAuth(pageParameters);
 
+		StepStatus step1Status, step2Status, step3Status;
+		if (getMyExpAccessToken() == null) {
+			step1Status = StepStatus.PENDING;
+		}
+		else {
+			step1Status = StepStatus.DONE;
+		}
+		if (getDlibraAccessToken() != null) {
+			step2Status = StepStatus.DONE;
+		}
+		else if (getMyExpAccessToken() != null) {
+			step2Status = StepStatus.PENDING;
+		}
+		else {
+			step2Status = StepStatus.NOT_AVAILABLE;
+		}
+		if (getImportDone()) {
+			step3Status = StepStatus.DONE;
+		}
+		else if (getDlibraAccessToken() != null) {
+			step3Status = StepStatus.PENDING;
+		}
+		else {
+			step3Status = StepStatus.NOT_AVAILABLE;
+		}
+
 		Form< ? > form = new Form<Void>("form");
 		content.add(form);
+		final WebMarkupContainer step1 = new WebMarkupContainer("step1");
+		final WebMarkupContainer step2 = new WebMarkupContainer("step2");
+		final WebMarkupContainer step3 = new WebMarkupContainer("step3");
+		form.add(step1);
+		form.add(step2);
+		form.add(step3);
+		step1.add(AttributeModifier.replace("class", step1Status.toString()
+				.toLowerCase()));
+		step2.add(AttributeModifier.replace("class", step2Status.toString()
+				.toLowerCase()));
+		step3.add(AttributeModifier.replace("class", step3Status.toString()
+				.toLowerCase()));
 
 		final Button authMyExpButton = new Button("authMyExp") {
 
@@ -79,8 +124,8 @@ public class HomePage
 				}
 			}
 		};
-		authMyExpButton.setEnabled(getMyExpAccessToken() == null);
-		form.add(authMyExpButton).setOutputMarkupId(true);
+		authMyExpButton.setEnabled(step1Status == StepStatus.PENDING);
+		step1.add(authMyExpButton).setOutputMarkupId(true);
 
 		final Button authDlibraButton = new Button("authDlibra") {
 
@@ -99,9 +144,8 @@ public class HomePage
 				}
 			}
 		};
-		authDlibraButton.setEnabled(getMyExpAccessToken() != null
-				&& getDlibraAccessToken() == null);
-		form.add(authDlibraButton).setOutputMarkupId(true);
+		authDlibraButton.setEnabled(step2Status == StepStatus.PENDING);
+		step2.add(authDlibraButton).setOutputMarkupId(true);
 
 		final Button importButton = new Button("myExpImportButton") {
 
@@ -111,9 +155,21 @@ public class HomePage
 				goToPage(MyExpImportPage.class, null);
 			}
 		};
-		importButton.setEnabled(getMyExpAccessToken() != null
-				&& getDlibraAccessToken() != null);
-		form.add(importButton).setOutputMarkupId(true);
+		importButton.setEnabled(step3Status == StepStatus.PENDING
+				|| step3Status == StepStatus.DONE);
+		step3.add(importButton).setOutputMarkupId(true);
+
+		content.add(new Link<String>("clear") {
+
+			@Override
+			public void onClick()
+			{
+				setMyExpAccessToken(null);
+				setDlibraAccessToken(null);
+				setImportDone(false);
+				setResponsePage(new HomePage());
+			}
+		});
 	}
 
 

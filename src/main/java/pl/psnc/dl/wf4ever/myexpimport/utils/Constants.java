@@ -13,4 +13,6 @@ public class Constants
 	public static final String SESSION_DLIBRA_ACCESS_TOKEN = "dLibraAccessToken";
 
 	public static final String SESSION_MYEXP_ACCESS_TOKEN = "myExpAccessToken";
+
+	public static final String SESSION_IMPORT_DONE = "importDone";
 }

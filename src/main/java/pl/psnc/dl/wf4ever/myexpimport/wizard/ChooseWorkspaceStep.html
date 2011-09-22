@@ -1,9 +1,17 @@
 <?xml version="1.0"?>
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
 	<div class="entry">
-		<p>Please input the workspace id below.</p>
 		<form wicket:id="form">
-			<input type="text" wicket:id="workspaceId" />
+			<p>Please choose the workspace to which the Research Objects will be imported.</p>
+			<span wicket:id="radioGroup">
+				<p>
+					<input wicket:id="existing" type="radio">An existing workspace:</input> <select
+						wicket:id="existingWorkspaceId" />
+				</p>
+				<p>
+					<input wicket:id="new" type="radio">A new workspace:</input> <input type="text" wicket:id="newWorkspaceId" />
+				</p>
+			</span>
 		</form>
 	</div>
 </wicket:panel>

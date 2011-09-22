@@ -5,23 +5,39 @@
 		<div class="entry">
 			<form wicket:id="form">
 				<p>In order to start importing your data from myExperiment to
-					dLibra, you need to give access to both services:</p>
-				<ol>
-					<li><p>
-							Authorize this service to get your data from myExperiment <input
-								type="submit" wicket:id="authMyExp" value="Start" />
-						</p></li>
-					<li><p>
-							Authorize this service to put your data to dLibra <input
-								type="submit" wicket:id="authDlibra" value="Start" />
-						</p></li>
-					<li><p>
-							Start the import process <input type="submit"
-								wicket:id="myExpImportButton"
-								value="Import data from myExperiment" />
-						</p></li>
-				</ol>
+					dLibra, you need to give have accounts in both services. If you
+					don't have an account in dLibra yet, it will be created
+					automatically for you in step 2 below.</p>
+				<p>Follow the steps below to give access to the Import Service
+					to your accounts. In steps 1 and 2 you will be redirected to
+					myExperiment and Wf4Ever User Management Service, where you will be
+					asked to log in (if you are not logged in already) and to give
+					authorization.</p>
+				<table class="steps">
+					<tbody>
+						<tr wicket:id="step1">
+							<td class="step_status"></td>
+							<td class="step_message">1. Authorize the Import Service to get your data from
+								myExperiment</td>
+							<td class="step_action"><input type="submit" wicket:id="authMyExp" value="Go" /></td>
+						</tr>
+						<tr wicket:id="step2">
+							<td class="step_status"></td>
+							<td class="step_message">2. Authorize the Import Service to put your data to
+								dLibra</td>
+							<td class="step_action"><input type="submit" wicket:id="authDlibra" value="Go" /></td>
+						</tr>
+						<tr wicket:id="step3">
+							<td class="step_status"></td>
+							<td class="step_message">3. Import your data</td>
+							<td class="step_action"><input type="submit" wicket:id="myExpImportButton"
+								value="Go" /></td>
+						</tr>
+					</tbody>
+				</table>
 			</form>
+			<p>&nbsp;</p>
+			<p><a wicket:id="clear">Reset the import process</a></p>
 		</div>
 	</div>
 </wicket:extend>

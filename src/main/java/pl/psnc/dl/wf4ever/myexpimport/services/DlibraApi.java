@@ -22,9 +22,9 @@ public class DlibraApi
 	private static final Logger log = Logger.getLogger(DlibraApi.class);
 
 	// client id
-	private static final String CONSUMER_KEY = "439c06d6-744a-4b1d-9";
+	private static final String CONSUMER_KEY = "b3c31959-ced6-41aa-b";
 
-	private static final String SHARED_SECRET = "bar";
+	private static final String SHARED_SECRET = "foobar";
 
 
 	public static OAuthService getOAuthService(String callbackURL)

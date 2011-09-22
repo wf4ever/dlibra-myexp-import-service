@@ -2,7 +2,8 @@
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
 	<div class="entry">
 		<p>
-			You have been authorized as <strong wicket:id="userName"></strong>.
+			You have been authorized in myExperiment as <strong
+				wicket:id="userName"></strong>.
 		</p>
 		<p>
 			<span wicket:id="packsCnt">0</span> packs, <span
@@ -20,11 +21,16 @@
 			available for processing in the future.</p>
 		<p>The wizard has the following steps:</p>
 		<ol>
-			<li>Select resources. Choose if you want to import all resources
-				as 1 RO <strong>or</strong> every resource as a separate RO.
-			</li>
-			<li>Choose RO names.</li>
-			<li><i>Go back to step 1 if you want to define more ROs.</i></li>
+			<li>Choose which workspace you want to import to.</li>
+			<li>Define Research Objects <i>(these steps can be repeated
+					many times)</i>:
+				<ol>
+					<li>Select resources. Choose if you want to import all
+						selected resources as 1 RO <strong>or</strong> every resource as a
+						separate RO.
+					</li>
+					<li>Choose RO names.</li>
+				</ol></li>
 			<li>Create ROs in dLibra, copy selected resources from
 				myExperiment to dLibra.</li>
 			<li>Summary.</li>

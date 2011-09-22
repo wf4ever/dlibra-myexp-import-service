@@ -74,6 +74,12 @@ public abstract class TemplatePage
 	}
 
 
+	public void setDlibraAccessToken(Token token)
+	{
+		getSession().setAttribute(Constants.SESSION_DLIBRA_ACCESS_TOKEN, token);
+	}
+
+
 	public Token getMyExpAccessToken()
 	{
 		return (Token) getSession().getAttribute(
@@ -81,15 +87,25 @@ public abstract class TemplatePage
 	}
 
 
-	public void setDlibraAccessToken(Token token)
-	{
-		getSession().setAttribute(Constants.SESSION_DLIBRA_ACCESS_TOKEN, token);
-	}
-
-
 	public void setMyExpAccessToken(Token token)
 	{
 		getSession().setAttribute(Constants.SESSION_MYEXP_ACCESS_TOKEN, token);
+	}
+
+
+	public boolean getImportDone()
+	{
+		if (getSession().getAttribute(Constants.SESSION_IMPORT_DONE) == null)
+			return false;
+		else
+			return (Boolean) getSession().getAttribute(
+				Constants.SESSION_IMPORT_DONE);
+	}
+
+
+	public void setImportDone(boolean done)
+	{
+		getSession().setAttribute(Constants.SESSION_IMPORT_DONE, done);
 	}
 
 

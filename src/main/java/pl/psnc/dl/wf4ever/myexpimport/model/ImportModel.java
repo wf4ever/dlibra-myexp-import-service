@@ -26,6 +26,10 @@ public class ImportModel
 		NOT_STARTED, RUNNING, PAUSED, FINISHED
 	}
 
+	public enum WorkspaceType {
+		EXISTING, NEW
+	}
+
 	private static final long serialVersionUID = -6654329540413067819L;
 
 	private List<ResearchObject> researchObjects;
@@ -39,8 +43,12 @@ public class ImportModel
 	private ImportStatus status = ImportStatus.NOT_STARTED;
 
 	private boolean mergeROs = true;
-	
-	private String workspaceId;
+
+	private WorkspaceType workspaceType = WorkspaceType.EXISTING;
+
+	private String existingWorkspaceId;
+
+	private String newWorkspaceId;
 
 
 	public ImportModel(User user)
@@ -178,18 +186,67 @@ public class ImportModel
 	/**
 	 * @return the workspaceId
 	 */
-	public String getWorkspaceId()
+	public String getNewWorkspaceId()
 	{
-		return workspaceId;
+		return newWorkspaceId;
 	}
 
 
 	/**
 	 * @param workspaceId the workspaceId to set
 	 */
-	public void setWorkspaceId(String workspaceId)
+	public void setNewWorkspaceId(String workspaceId)
 	{
-		this.workspaceId = workspaceId;
+		this.newWorkspaceId = workspaceId;
+	}
+
+
+	/**
+	 * @return the existingWorkspaceId
+	 */
+	public String getExistingWorkspaceId()
+	{
+		return existingWorkspaceId;
+	}
+
+
+	/**
+	 * @param existingWorkspaceId the existingWorkspaceId to set
+	 */
+	public void setExistingWorkspaceId(String existingWorkspaceId)
+	{
+		this.existingWorkspaceId = existingWorkspaceId;
+	}
+
+
+	public String getWorkspaceId()
+	{
+		switch (getWorkspaceType()) {
+			case EXISTING:
+				return getExistingWorkspaceId();
+			case NEW:
+				return getNewWorkspaceId();
+			default:
+				return null;
+		}
+	}
+
+
+	/**
+	 * @return the workspaceType
+	 */
+	public WorkspaceType getWorkspaceType()
+	{
+		return workspaceType;
+	}
+
+
+	/**
+	 * @param workspaceType the workspaceType to set
+	 */
+	public void setWorkspaceType(WorkspaceType workspaceType)
+	{
+		this.workspaceType = workspaceType;
 	}
 
 }

@@ -52,6 +52,7 @@ public class ImportDataStep
 				if (model.getStatus() == ImportStatus.FINISHED) {
 					stop();
 					importStatus.remove(this);
+					((TemplatePage)getPage()).setImportDone(true);
 					getSession().info("Import complete.");
 					getRequestCycle().setResponsePage(getPage());
 				}
