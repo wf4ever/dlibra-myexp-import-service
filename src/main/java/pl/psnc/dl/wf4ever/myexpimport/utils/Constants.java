@@ -21,4 +21,6 @@ public class Constants
 	public static final String SESSION_MYEXP_KEY = "myExpKey";
 
 	public static final String SESSION_MYEXP_SECRET = "myExpSecret";
+
+	public static final String SESSION_CALLBACK_URL = "callbackURL";
 }

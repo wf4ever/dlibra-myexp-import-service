@@ -27,7 +27,6 @@ import org.scribe.oauth.OAuthService;
 import pl.psnc.dl.wf4ever.myexpimport.services.DlibraApi;
 import pl.psnc.dl.wf4ever.myexpimport.services.MyExpApi;
 import pl.psnc.dl.wf4ever.myexpimport.utils.Constants;
-import pl.psnc.dl.wf4ever.myexpimport.utils.WicketUtils;
 
 /**
  * 
@@ -177,9 +176,9 @@ public class HomePage
 	private void processOAuth(PageParameters pageParameters)
 	{
 		if (getMyExpAccessToken() == null) {
-			OAuthService service = MyExpApi.getOAuthService(getMyExpConsumerKey(),
-				getMyExpConsumerSecret(), WicketUtils
-					.getCompleteUrl(this, HomePage.class));
+			OAuthService service = MyExpApi.getOAuthService(
+				getMyExpConsumerKey(), getMyExpConsumerSecret(),
+				getCallbackURL());
 			Token token = retrieveMyExpAccessToken(pageParameters, service);
 			setMyExpAccessToken(token);
 			if (token != null) {
@@ -187,8 +186,8 @@ public class HomePage
 			}
 		}
 		else if (getDlibraAccessToken() == null) {
-			OAuthService service = DlibraApi.getOAuthService(getDlibraClientId(), WicketUtils
-					.getCompleteUrl(this, HomePage.class));
+			OAuthService service = DlibraApi.getOAuthService(
+				getDlibraClientId(), getCallbackURL());
 			Token token = retrieveDlibraAccessToken(pageParameters, service);
 			setDlibraAccessToken(token);
 			if (token != null) {
@@ -207,6 +206,7 @@ public class HomePage
 			setMyExpConsumerKey(props.getProperty("myExpConsumerKey"));
 			setMyExpConsumerSecret(props.getProperty("myExpConsumerSecret"));
 			setDlibraClientId(props.getProperty("dLibraClientId"));
+			setCallbackURL(props.getProperty("callbackURL"));
 		}
 		catch (Exception e) {
 			error("Failed to load myExperiment and dLibra application keys!");
@@ -254,11 +254,8 @@ public class HomePage
 
 	private void startMyExpAuthorization()
 	{
-		String oauthCallbackURL = WicketUtils.getCompleteUrl(this,
-			HomePage.class);
-
 		OAuthService service = MyExpApi.getOAuthService(getMyExpConsumerKey(),
-			getMyExpConsumerSecret(), oauthCallbackURL);
+			getMyExpConsumerSecret(), getCallbackURL());
 		Token requestToken = service.getRequestToken();
 		getSession()
 				.setAttribute(Constants.SESSION_REQUEST_TOKEN, requestToken);
@@ -272,11 +269,8 @@ public class HomePage
 
 	protected void startDlibraAuthorization()
 	{
-		//		String oauthCallbackURL = WicketUtils.getCompleteUrl(this,
-		//			HomePage.class);
-		String oauthCallbackURL = "http://localhost:8080";
-
-		OAuthService service = DlibraApi.getOAuthService(getDlibraClientId(), oauthCallbackURL);
+		OAuthService service = DlibraApi.getOAuthService(getDlibraClientId(),
+			getCallbackURL());
 		String authorizationUrl = service.getAuthorizationUrl(null);
 		getRequestCycle().scheduleRequestHandlerAfterCurrent(
 			new RedirectRequestHandler(authorizationUrl));

@@ -147,6 +147,19 @@ public abstract class TemplatePage
 	}
 
 
+	protected void setCallbackURL(String property)
+	{
+		getSession().setAttribute(Constants.SESSION_CALLBACK_URL, property);
+	}
+
+
+	public String getCallbackURL()
+	{
+		return (String) getSession().getAttribute(
+			Constants.SESSION_CALLBACK_URL);
+	}
+
+
 	protected void goToPage(Class< ? extends TemplatePage> pageClass,
 			PageParameters pageParameters)
 	{

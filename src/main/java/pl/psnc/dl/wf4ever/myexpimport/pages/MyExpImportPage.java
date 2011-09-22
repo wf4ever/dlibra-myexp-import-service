@@ -10,7 +10,6 @@ import org.scribe.oauth.OAuthService;
 import pl.psnc.dl.wf4ever.myexpimport.model.ImportModel;
 import pl.psnc.dl.wf4ever.myexpimport.model.myexp.User;
 import pl.psnc.dl.wf4ever.myexpimport.services.MyExpApi;
-import pl.psnc.dl.wf4ever.myexpimport.utils.WicketUtils;
 import pl.psnc.dl.wf4ever.myexpimport.wizard.ImportWizard;
 
 /**
@@ -33,7 +32,7 @@ public class MyExpImportPage
 		OAuthService service = MyExpApi.getOAuthService(
 
 		getMyExpConsumerKey(), getMyExpConsumerSecret(),
-			WicketUtils.getCompleteUrl(this, MyExpImportPage.class));
+			getCallbackURL());
 
 		try {
 			User myExpUser = retrieveMyExpUser(getMyExpAccessToken(), service);
