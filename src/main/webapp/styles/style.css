@@ -385,6 +385,11 @@ img.aligncenter {
 
 table.resourceList {
 	width: 500px;
+	border-spacing: 0;
+}
+
+table.resourceList td {
+	padding: 5px;
 }
 
 tr.even {

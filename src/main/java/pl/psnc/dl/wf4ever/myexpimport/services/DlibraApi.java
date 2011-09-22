@@ -21,7 +21,7 @@ public class DlibraApi
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(DlibraApi.class);
 
-	public static OAuthService getOAuthService(String callbackURL, String clientId)
+	public static OAuthService getOAuthService(String clientId, String callbackURL)
 	{
 		//		return new ServiceBuilder().provider(DlibraApi.class)
 		//				.apiKey(DlibraApi.CONSUMER_KEY)
