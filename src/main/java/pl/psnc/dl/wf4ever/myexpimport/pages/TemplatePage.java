@@ -122,25 +122,25 @@ public abstract class TemplatePage
 	}
 
 
-	protected void setMyExpConsumerSecret(String property)
+	protected void setMyExpConsumerKey(String property)
 	{
 		getSession().setAttribute(Constants.SESSION_MYEXP_KEY, property);
 	}
 
 
-	public String getMyExpConsumerSecret()
+	public String getMyExpConsumerKey()
 	{
 		return (String) getSession().getAttribute(Constants.SESSION_MYEXP_KEY);
 	}
 
 
-	protected void setMyExpConsumerKey(String property)
+	protected void setMyExpConsumerSecret(String property)
 	{
 		getSession().setAttribute(Constants.SESSION_MYEXP_SECRET, property);
 	}
 
 
-	public String getMyExpConsumerKey()
+	public String getMyExpConsumerSecret()
 	{
 		return (String) getSession().getAttribute(
 			Constants.SESSION_MYEXP_SECRET);
