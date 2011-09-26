@@ -23,6 +23,26 @@ public class OAuthHelpService
 
 
 	/**
+	 * Sends an unsigned request with no body.
+	 * @param service
+	 * @param verb
+	 * @param url
+	 * @param token
+	 * @return
+	 * @throws OAuthException
+	 */
+	public static Response sendRequest(OAuthService service, Verb verb,
+			String url)
+		throws OAuthException
+	{
+		OAuthRequest request = new OAuthRequest(verb, url);
+		Response response = request.send();
+		validateResponseCode(verb, response);
+		return response;
+	}
+
+
+	/**
 	 * Executes a request with no body.
 	 * @param service
 	 * @param verb

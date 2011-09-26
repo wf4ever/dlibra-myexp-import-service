@@ -4,11 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -20,12 +15,16 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.scribe.model.Response;
 import org.scribe.model.Token;
+import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import pl.psnc.dl.wf4ever.myexpimport.services.DlibraApi;
 import pl.psnc.dl.wf4ever.myexpimport.services.MyExpApi;
+import pl.psnc.dl.wf4ever.myexpimport.services.OAuthException;
+import pl.psnc.dl.wf4ever.myexpimport.services.OAuthHelpService;
 import pl.psnc.dl.wf4ever.myexpimport.utils.Constants;
 
 /**
@@ -326,17 +325,17 @@ public class HomePage
 			String url = new DlibraApi().getAccessTokenEndpoint()
 					+ "?grant_type=authorization_code&code="
 					+ pageParameters.get("code").toString();
+			ObjectMapper mapper = new ObjectMapper();
+			String body = null;
 			try {
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpGet httpget = new HttpGet(url);
-				HttpResponse response = httpclient.execute(httpget);
-				HttpEntity entity = response.getEntity();
-				ObjectMapper mapper = new ObjectMapper();
-				@SuppressWarnings("unchecked")
-				Map<String, String> responseData = mapper.readValue(
-					entity.getContent(), Map.class);
-				entity.getContent().close();
-				if (response.getStatusLine().getStatusCode() == 200) {
+				Response response;
+				try {
+					response = OAuthHelpService.sendRequest(service,
+						Verb.GET, url);
+					body = response.getBody();
+					@SuppressWarnings("unchecked")
+					Map<String, String> responseData = mapper.readValue(body,
+						Map.class);
 					if (responseData.containsKey("access_token")
 							&& responseData.containsKey("token_type")) {
 						if (responseData.get("token_type").equalsIgnoreCase(
@@ -353,7 +352,11 @@ public class HomePage
 						error("Missing keys from access token endpoint response");
 					}
 				}
-				else {
+				catch (OAuthException e) {
+					body = e.getResponse().getBody();
+					@SuppressWarnings("unchecked")
+					Map<String, String> responseData = mapper.readValue(body,
+						Map.class);
 					error(String.format(
 						"Access token endpoint returned error %s (%s)",
 						responseData.get("error"),
@@ -362,15 +365,15 @@ public class HomePage
 			}
 			catch (JsonParseException e) {
 				error("Error in parsing access token endpoint response: "
-						+ e.getMessage());
+						+ body);
 			}
 			catch (JsonMappingException e) {
 				error("Error in parsing access token endpoint response: "
-						+ e.getMessage());
+						+ body);
 			}
 			catch (IOException e) {
 				error("Error in parsing access token endpoint response: "
-						+ e.getMessage());
+						+ body);
 			}
 		}
 		return accessToken;
