@@ -35,7 +35,7 @@ public class DlibraService
 
 	private static final Logger log = Logger.getLogger(DlibraService.class);
 
-	public static final String DEFAULT_VERSION = "main";
+	public static final String DEFAULT_VERSION = "v1";
 
 	private static final String URI_SCHEME = "http";
 
