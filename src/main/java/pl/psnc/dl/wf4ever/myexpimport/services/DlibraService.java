@@ -210,7 +210,7 @@ public class DlibraService
 
 
 	public static void sendResource(String workspaceId, String path,
-			String roName, String content, String contentType, Token dLibraToken)
+			String roName, byte[] content, String contentType, Token dLibraToken)
 		throws Exception
 	{
 		String url = createResourceURL(workspaceId, roName, DEFAULT_VERSION,

@@ -101,7 +101,7 @@ public class OAuthHelpService
 	 * @throws OAuthException
 	 */
 	public static Response sendRequest(OAuthService service, Verb verb,
-			String url, Token token, String payload, String contentType)
+			String url, Token token, byte[] payload, String contentType)
 		throws OAuthException
 	{
 		OAuthRequest request = new OAuthRequest(verb, url);

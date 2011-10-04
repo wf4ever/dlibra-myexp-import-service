@@ -37,7 +37,7 @@ public class DlibraApi
 	@Override
 	public String getAccessTokenEndpoint()
 	{
-		return "http://sandbox.wf4ever-project.org/users/accesstoken";
+		return "http://sandbox.wf4ever-project.org/users2/accesstoken";
 	}
 
 
@@ -47,7 +47,7 @@ public class DlibraApi
 		// note: in response type "token" it is required to add redirection URI
 		return String
 				.format(
-					"http://sandbox.wf4ever-project.org/users/authorize?client_id=%s&response_type=%s",
+					"http://sandbox.wf4ever-project.org/users2/authorize?client_id=%s&response_type=%s",
 					config.getApiKey(), "code");
 	}
 }

@@ -43,9 +43,9 @@ public abstract class SimpleResource
 	}
 
 
-	public String getContentDecoded()
+	public byte[] getContentDecoded()
 	{
-		return new String(Base64.decodeBase64(content));
+		return Base64.decodeBase64(content);
 	}
 
 
