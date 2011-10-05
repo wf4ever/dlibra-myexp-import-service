@@ -201,7 +201,7 @@ public class ResearchObject
 		}
 		else {
 			name = StringUtils.left(resource.getTitle(), NAME_MAX_LEN)
-					.replaceAll("\\s", "_");
+					.replaceAll("(\\W|_)+", "_");
 		}
 	}
 
